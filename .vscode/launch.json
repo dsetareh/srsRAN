@@ -1,0 +1,32 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch srsUE",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/srsue/src/srsue",
+      "args": [
+        "--rf.device_name=zmq",
+        "--rf.device_args=\"tx_port=tcp://*:2001,rx_port=tcp://localhost:2000,id=ue,base_srate=23.04e6\"",
+        "--gw.netns=ue1"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build/",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/home/dsetareh/gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
