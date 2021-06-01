@@ -5,3 +5,5 @@ build/*
 *.conf
 *.example
 *.csv
+*.pcap
+*.log
