@@ -102,12 +102,13 @@ fi
 
 
 install_file "ue.conf.example"
+install_file "ue.conf.fauxrf.example"
 install_file "enb.conf.example"
+install_file "enb.conf.fauxrf.example"
 install_file "sib.conf.example"
 install_file "rr.conf.example"
 install_file "drb.conf.example"
 install_file "epc.conf.example"
-install_file "epc.conf.fauxrf.example"
 install_file "mbms.conf.example"
 install_file "user_db.csv.example"
 
