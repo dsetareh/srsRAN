@@ -2,17 +2,29 @@
 
 if [ $# -ne 2 ]
   then
-    echo "Syntax: ./startFuzzing.sh [test start index] [test end index]"
+    echo "Syntax: ./startFuzzing.sh <test start index> <test end index>"
+    exit 1
+fi
+
+if [ $1 <= 0 ]
+  then
+    echo "Start Index must be above 0!"
+    exit 1
+fi
+
+if [ $1 > $2 ]
+  then
+    echo "Start Index cannot be less than End Index!"
     exit 1
 fi
 
 echo starting fuzzing using scenarios $1 - $2
 sleep 1
 
-for i in {$1..$2}
+for (( i=$1; i<=$2; i++ ))
 do
     # contruct header for logs and stdout
-    curr_test=$(awk '{if(NR==$i) print $0}' decimalFuzz.txt)
+    curr_test=$(sed "${i}q;d" decimalFuzz.txt)
     test_header="-------------FUZZ TEST $i ($curr_test)------------------"
 
     # print to logs and stdout
