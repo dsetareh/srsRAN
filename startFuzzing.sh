@@ -8,7 +8,7 @@ NC='\033[0m'
 
 if [ $# -ne 2 ] && [ $# -ne 3 ]
   then
-    echo -e "Syntax: ./startFuzzing.sh <test start index> <test end index> <-d> (Optional, to delete existing log files)\n"
+    echo -e "Syntax: ./startFuzzing.sh <test start index> <test end index> <-d> (Optional, to delete existing log files)"
     exit 1
 fi
 
@@ -74,7 +74,7 @@ do
     sleep 5 # ! 5 second wait, this is how long the full env lasts before killing begins
 
     # use stored pid's to kill ue, then enb, then epc
-    echo Killing UE ($ue_pid), ENB ($enb_pid), EPC ($epc_pid)
+    echo -e "Killing UE ($ue_pid), ENB ($enb_pid), EPC ($epc_pid)"
     kill -KILL $ue_pid
     kill -KILL $enb_pid
     kill -KILL $epc_pid
