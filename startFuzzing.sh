@@ -8,7 +8,7 @@ NC='\033[0m'
 
 if [ $# -ne 2 ] && [ $# -ne 3 ]
   then
-    echo -e "Syntax: ./startFuzzing.sh <test start index> <test end index> <-d> (Optional, to delete existing log files)"
+    echo -e "Syntax: ./startFuzzing.sh <test start index> <test end index> <-d> (Optional, to delete existing log files)\n"
     exit 1
 fi
 
@@ -44,7 +44,7 @@ for (( i=$1; i<=$2; i++ ))
 do
     # contruct header for logs and stdout
     curr_test=$(sed "${i}q;d" decimalFuzz.txt)
-    test_header="${GREEN}-------------FUZZ TEST $i ($curr_test)------------------${NC}"
+    test_header="${GREEN}-------------FUZZ TEST $i ($curr_test)------------------${NC}\n"
 
     # print to logs and stdout
     echo -e $test_header
@@ -70,29 +70,24 @@ do
     echo UE  PID: $ue_pid 
 
 
-    echo
-    echo -e "${RED}!!${NC} FUZZING ${RED}!!${NC}"
+    echo -e "\n${RED}!!${NC} FUZZING ${RED}!!${NC}\n"
     sleep 5 # ! 5 second wait, this is how long the full env lasts before killing begins
-    echo
 
     # use stored pid's to kill ue, then enb, then epc
-    echo Killing UE
+    echo Killing UE ($ue_pid), ENB ($enb_pid), EPC ($epc_pid)
     kill -KILL $ue_pid
-    echo Killing ENB
     kill -KILL $enb_pid
-    echo Killing EPC
     kill -KILL $epc_pid
 
     sleep 6 # ! 6 second wait
 
     # save pcap file for enb
-    echo Saving ENB PCAP as fuzzLogs/pcap/$i.pcap
+    echo -e "${GREEN}Saving ENB PCAP as fuzzLogs/pcap/$i.pcap${NC}\n"
     cp enb.pcap fuzzLogs/pcap/$i.pcap
     sleep 3 # ! 3 second wait
 
     # log competion of iteration, continue
-    echo -e "${GREEN}Test complete, Log written, starting next test in 5 seconds...${NC}"
-    echo
+    echo -e "${GREEN}Test complete, Log written, starting next test in 5 seconds...${NC}\n"
     sleep 5 # ! 5 second wait
 done
 
