@@ -856,49 +856,39 @@ namespace srsue {
       &ul_ccch_msg.msg.set_c1().set_rrc_conn_request().crit_exts.set_rrc_conn_request_r8();
 
     // ! fuzz load starts here !
-    std::ifstream newfile("/home/dsetareh/srsRAN/fuzzingTests.txt"); // open test file
+    std::ifstream newfile("/home/dsetareh/srsRAN/decimalFuzz.txt"); // open test file
     std::string testStr; // str buffer
 
     // Skip to line given in args (-f)
-    for (int i = 1; i <= args.fuzzLine; i++) { // ! temp i <= args.fuzzLine
+    for (int i = 1; i <= args.fuzzLine; i++) {
       std::getline(newfile, testStr); // load into testStr
     }
     // TODO: Load values correctly and output them
 
-    // ! temp print
-    printf("\nRaw Read (Line %d): %s\n", args.fuzzLine, testStr.c_str());
+    std::string buf;                 // Have a buffer string
+    std::stringstream ss(testStr);       // Insert the string into a stream
 
-    std::stringstream converter; // helper for conversion of hexString to uint
-
-    // * load mmec (byte 0)
-    printf("MMEC read as: %s\n", testStr.substr(0, 2).c_str()); // print substring
-    converter << std::hex << testStr.substr(0, 2).c_str(); // conversion
-    converter >> ue_identity.mmec;  // load into mmec
-    printf("MMEC set to: %d\n", ue_identity.mmec); // print mmec in decimal
-
-    // * load t-TMSI (bytes 1-4, inclusive)
-    printf("t-TMSI read as: %s\n", testStr.substr(2, 8).c_str()); // print substring
-    converter << std::hex << testStr.substr(2, 8).c_str(); // conversion
-    converter >> ue_identity.m_tmsi;  // load into tmsi
-    printf("t-TMSI set to: %d\n", ue_identity.m_tmsi); // print tmsi in decimal
-
-    // * load establishment cause, (4 bits, half byte)
-    printf("Establishment Cause: %s\n\n", testStr.substr(10, 2).c_str()); // print substring
-    // ! set establishment cause !
-
+    std::vector<std::string> tokens; // Create vector to hold our words
+    // move words
+    while (ss >> buf)
+      tokens.push_back(buf);
+    // str -> int
+    ue_identity.mmec = std::stoi(tokens.at(0));
+    ue_identity.m_tmsi = std::stoi(tokens.at(1));
+    int tempEstCause = std::stoi(tokens.at(2));
+    // print logs to stdout
+    printf("------------Loading Case %06d-----------\n", args.fuzzLine);
+    printf("MMEC loaded from file: 0x%02x\n", ue_identity.mmec);
+    printf("TMSI loaded from file: 0x%08x\n", ue_identity.m_tmsi);
+    printf("EstCause loaded from file: 0x%01x\n", tempEstCause);
+    printf("------------------------------------------\n");
     // close file
     newfile.close();
-
-    // ! TEMP BELOW
-    // Constructing our own fields
-    ue_identity.m_tmsi = 0xFFFFFFFF;
-    ue_identity.mmec = 0xFF;
-
     // ! fuzz load ends here !
 
     rrc_conn_req->ue_id.set_s_tmsi();
     srsran::to_asn1(&rrc_conn_req->ue_id.s_tmsi(), ue_identity);
-    rrc_conn_req->establishment_cause = (establishment_cause_opts::options)cause;
+    rrc_conn_req->establishment_cause = (establishment_cause_opts::options)tempEstCause; // ! s/cause/tempEstCause/
 
     send_ul_ccch_msg(ul_ccch_msg); // ul_ccch_msg contains ptr to rrc_conn_req
   }

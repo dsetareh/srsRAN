@@ -10,7 +10,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/srsue/src/srsue",
       "args": [
-        "-f170892"
+        "-f17"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build/",

@@ -65,7 +65,7 @@ static int parse_args(all_args_t* args, int argc, char* argv[])
   // Command line only options
   bpo::options_description general("General options");
 
-  general.add_options()("help,h", "Produce help message")("version,v", "Print version information and exit")("fuzz,f", bpo::value<int>(&args->stack.rrc.fuzzLine)->default_value(0), "line to load bytes from (fuzzingTests.txt)");
+  general.add_options()("help,h", "Produce help message")("version,v", "Print version information and exit")("fuzz,f", bpo::value<int>(&args->stack.rrc.fuzzLine)->default_value(123456), "line to load bytes from (fuzzingTests.txt)");
 
   // Command line or config file options
   bpo::options_description common("Configuration options");
