@@ -873,9 +873,9 @@ namespace srsue {
     while (ss >> buf)
       tokens.push_back(buf);
     // str -> int
-    ue_identity.mmec = std::stoi(tokens.at(0));
-    ue_identity.m_tmsi = std::stoi(tokens.at(1));
-    int tempEstCause = std::stoi(tokens.at(2));
+    ue_identity.mmec = std::stoul(tokens.at(0));
+    ue_identity.m_tmsi = std::stoul(tokens.at(1));
+    int tempEstCause = std::stoul(tokens.at(2));
     // print logs to stdout
     printf("------------Loading Case %06d-----------\n", args.fuzzLine);
     printf("MMEC loaded from file: 0x%02x\n", ue_identity.mmec);
