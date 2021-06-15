@@ -1,11 +1,5 @@
 #!/bin/bash
 
-if [ $# -ne 2 ]
-  then
-    echo "Syntax: ./startFuzzing.sh <test start index> <test end index>"
-    exit 1
-fi
-
 if [ $1 -le 0 ]
   then
     echo "Start Index must be above 0!"
@@ -18,8 +12,26 @@ if [ $1 -gt $2 ]
     exit 1
 fi
 
-echo starting fuzzing using scenarios $1 - $2
-sleep 1
+if [ $# -eq 2 ] || [ $# -eq 3 ]
+  then
+    echo starting fuzzing using scenarios $1 - $2
+    sleep 1
+  else
+    echo "Syntax: ./startFuzzing.sh <test start index> <test end index> <-d> (Optional, to delete existing log files)"
+    exit 1
+fi
+
+if [ $# -eq 3 ] && [ $3 == "-d" ]
+  then
+    echo Deleting prior log files...
+    rm fuzzLogs/*.txt
+  else 
+    if [ $# -eq 3 ]
+    then
+      echo "third argument invalid, only -d supported"
+      exit 1
+    fi
+fi
 
 for (( i=$1; i<=$2; i++ ))
 do
@@ -51,21 +63,23 @@ do
     echo UE  PID: $ue_pid 
 
 
+    echo
+    echo !! FUZZING !!
     sleep 5 # ! 5 second wait, this is how long the full env lasts before killing begins
+    echo
 
     # use stored pid's to kill ue, then enb, then epc
     echo Killing UE
-    sleep 1 # * 1 second wait
     kill -KILL $ue_pid
     echo Killing ENB
-    sleep 1 # * 1 second wait
     kill -KILL $enb_pid
     echo Killing EPC
-    sleep 1 # * 1 second wait
     kill -KILL $epc_pid
+    sleep 5 # ! 5 second wait
 
     # log competion of iteration, continue
     echo Kills complete, Log written, starting next iteration in 5 seconds...
+    echo
     sleep 5 # ! 5 second wait
 done
 
