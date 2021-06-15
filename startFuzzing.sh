@@ -1,9 +1,14 @@
 #!/bin/bash
 
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+
 if [ $# -ne 2 ] && [ $# -ne 3 ]
   then
-    echo "Syntax: ./startFuzzing.sh <test start index> <test end index> <-d> (Optional, to delete existing log files)"
+    echo -e "Syntax: ./startFuzzing.sh <test start index> <test end index> <-d> (Optional, to delete existing log files)"
     exit 1
 fi
 
@@ -22,8 +27,8 @@ fi
 
 if [ $# -eq 3 ] && [ $3 == "-d" ]
   then
-    echo Deleting prior log files...
-    rm fuzzLogs/*.txt
+    echo -e "${RED}Deleting prior log files...${NC}"
+    rm -f fuzzLogs/*.txt
   else 
     if [ $# -eq 3 ]
     then
@@ -33,19 +38,19 @@ if [ $# -eq 3 ] && [ $3 == "-d" ]
 fi
 
     echo Starting fuzzing using scenarios $1 - $2...
-    sleep 5
+    sleep 3
 
 for (( i=$1; i<=$2; i++ ))
 do
     # contruct header for logs and stdout
     curr_test=$(sed "${i}q;d" decimalFuzz.txt)
-    test_header="-------------FUZZ TEST $i ($curr_test)------------------"
+    test_header="${GREEN}-------------FUZZ TEST $i ($curr_test)------------------${NC}"
 
     # print to logs and stdout
-    echo $test_header
-    echo $test_header >> fuzzLogs/epcFuzzLogs.txt
-    echo $test_header >> fuzzLogs/enbFuzzLogs.txt
-    echo $test_header >> fuzzLogs/epcFuzzLogs.txt
+    echo -e $test_header
+    echo -e $test_header >> fuzzLogs/epcFuzzLogs.txt
+    echo -e $test_header >> fuzzLogs/enbFuzzLogs.txt
+    echo -e $test_header >> fuzzLogs/epcFuzzLogs.txt
 
     # start epc, append output to log file, store pid, echo pid
     /home/dsetareh/srsRAN/build/srsepc/src/srsepc >> fuzzLogs/epcFuzzLogs.txt &
@@ -66,7 +71,7 @@ do
 
 
     echo
-    echo !! FUZZING !!
+    echo -e "${RED}!!${NC} FUZZING ${RED}!!${NC}"
     sleep 5 # ! 5 second wait, this is how long the full env lasts before killing begins
     echo
 
@@ -77,10 +82,16 @@ do
     kill -KILL $enb_pid
     echo Killing EPC
     kill -KILL $epc_pid
-    sleep 5 # ! 5 second wait
+
+    sleep 6 # ! 6 second wait
+
+    # save pcap file for enb
+    echo Saving ENB PCAP as fuzzLogs/pcap/$i.pcap
+    cp enb.pcap fuzzLogs/pcap/$i.pcap
+    sleep 3 # ! 3 second wait
 
     # log competion of iteration, continue
-    echo Kills complete, Log written, starting next iteration in 5 seconds...
+    echo -e "${GREEN}Test complete, Log written, starting next test in 5 seconds...${NC}"
     echo
     sleep 5 # ! 5 second wait
 done
