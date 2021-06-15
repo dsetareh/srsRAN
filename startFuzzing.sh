@@ -6,13 +6,13 @@ if [ $# -ne 2 ]
     exit 1
 fi
 
-if [ $1 <= 0 ]
+if [ $1 -le 0 ]
   then
     echo "Start Index must be above 0!"
     exit 1
 fi
 
-if [ $1 > $2 ]
+if [ $1 -gt $2 ]
   then
     echo "Start Index cannot be less than End Index!"
     exit 1
