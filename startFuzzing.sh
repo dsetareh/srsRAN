@@ -1,5 +1,13 @@
 #!/bin/bash
 
+
+if [ $# -ne 2 ] && [ $# -ne 3 ]
+  then
+    echo "Syntax: ./startFuzzing.sh <test start index> <test end index> <-d> (Optional, to delete existing log files)"
+    exit 1
+fi
+
+
 if [ $1 -le 0 ]
   then
     echo "Start Index must be above 0!"
@@ -9,15 +17,6 @@ fi
 if [ $1 -gt $2 ]
   then
     echo "Start Index cannot be less than End Index!"
-    exit 1
-fi
-
-if [ $# -eq 2 ] || [ $# -eq 3 ]
-  then
-    echo starting fuzzing using scenarios $1 - $2
-    sleep 1
-  else
-    echo "Syntax: ./startFuzzing.sh <test start index> <test end index> <-d> (Optional, to delete existing log files)"
     exit 1
 fi
 
@@ -32,6 +31,9 @@ if [ $# -eq 3 ] && [ $3 == "-d" ]
       exit 1
     fi
 fi
+
+    echo Starting fuzzing using scenarios $1 - $2...
+    sleep 5
 
 for (( i=$1; i<=$2; i++ ))
 do
