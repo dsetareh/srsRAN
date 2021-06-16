@@ -116,8 +116,8 @@ rx_gain = 40
 # client_port Client IP address for MAC network trace (default: 5847)
 #####################################################################
 [pcap]
-enable = false
-filename = /tmp/enb.pcap
+enable = true
+filename = /pcaps/enb.pcap
 s1ap_enable = false
 s1ap_filename = /tmp/enb_s1ap.pcap
 
