@@ -121,7 +121,7 @@ device_args = type=enb,band0=3350
 #####################################################################
 [pcap]
 enable = true
-# filename = /srsran/enb.pcap
+filename = /pcaps/enb.pcap
 s1ap_enable = false
 s1ap_filename = /tmp/enb_s1ap.pcap
 
