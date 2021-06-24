@@ -36,8 +36,10 @@ tx_gain = 80
 #     USRP B210: send_frame_size=512,recv_frame_size=512
 
 #device_args = auto
-#time_adv_nsamples = auto
-continuous_tx     = 0
+time_adv_nsamples = 0
+continuous_tx = 0
+
+
 
 # Example for ZMQ-based operation with TCP transport for I/Q samples
 #device_name = zmq
@@ -45,7 +47,7 @@ continuous_tx     = 0
 
 # Example for shmem rf
 device_name = shmemrf
-device_args = type=ue,band0=3350
+device_args = type=ue,band0=2850
 #####################################################################
 # EUTRA RAT configuration
 # 
@@ -57,8 +59,8 @@ device_args = type=ue,band0=3350
 # nof_carriers:       Number of carriers
 #####################################################################
 [rat.eutra]
-dl_earfcn = 3350
-#nof_carriers = 1
+dl_earfcn = 2850
+nof_carriers = 1
 
 #####################################################################
 # NR RAT configuration
@@ -164,7 +166,7 @@ imei = 353490069873319
 #ue_category       = 4
 #release           = 15
 #feature_group     = 0xe6041000
-#mbms_service_id   = -1
+mbms_service_id   = -1
 #mbms_service_port = 4321
 
 #####################################################################
@@ -198,8 +200,8 @@ imei = 353490069873319
 #####################################################################
 [gw]
 #netns =
-#ip_devname = tun_srsue
-#ip_netmask = 255.255.255.0
+ip_devname = srsue
+ip_netmask = 255.255.255.0
 
 #####################################################################
 # GUI configuration

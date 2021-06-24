@@ -83,7 +83,7 @@ rx_gain = 40
 
 # Example for shmem rf
 device_name = shmemrf
-device_args = type=enb,band0=3350
+device_args = type=enb,band0=2850
 
 #####################################################################
 # Packet capture configuration
@@ -152,7 +152,7 @@ client_port = 5847
 #                If set to negative, a single log file will be created.
 #####################################################################
 [log]
-all_level = warning
+all_level = info
 all_hex_limit = 32
 filename = stdout
 file_max_size = -1
@@ -315,7 +315,7 @@ enable = false
 [expert]
 #pusch_max_its        = 8 # These are half iterations
 #pusch_8bit_decoder   = false
-nof_phy_threads       = 1
+nof_phy_threads       = 3
 #metrics_period_secs  = 1
 #metrics_csv_enable   = false
 #metrics_csv_filename = /tmp/enb_metrics.csv
