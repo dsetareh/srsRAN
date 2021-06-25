@@ -1,5 +1,6 @@
 # How to run multiple srsRAN + zmq environments on one machine
 
+`NOTE: ue/enb/epc.conf should already be setup for normal single environment srsRAN+zmq`
 ## generate namespaces
 ```
 ip netns add ue1
