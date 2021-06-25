@@ -99,7 +99,9 @@ void parse_args(all_args_t* args, int argc, char* argv[])
   general.add_options()
       ("help,h", "Produce help message")
       ("version,v", "Print version information and exit")
-      ;
+    ("spgw.unix_abstract_handle_mme", bpo::value<string>(&args->spgw_args.unix_abstract_handle_mme)->default_value("@mme_s11"), "MME Abstract Handle Name")
+    ("spgw.unix_abstract_handle_spgw", bpo::value<string>(&args->spgw_args.unix_abstract_handle_spgw)->default_value("@spgw_s11"), "SPGW Abstract Handle Name")
+    ;
 
   // Command line or config file options
   bpo::options_description common("Configuration options");
@@ -269,6 +271,10 @@ void parse_args(all_args_t* args, int argc, char* argv[])
     cout << "Error parsing mme.integrity_algo:" << encryption_algo << " - must be EIA0, EIA1, EIA2 or EIA3." << endl;
     cout << "Using default mme.integrity_algo: EIA1" << endl;
   }
+
+  //&args->spgw_args.unix_abstract_handle_spgw
+  args->mme_args.s1ap_args.unix_abstract_handle_spgw = args->spgw_args.unix_abstract_handle_spgw;
+  args->mme_args.s1ap_args.unix_abstract_handle_mme = args->spgw_args.unix_abstract_handle_mme;
 
   args->mme_args.s1ap_args.mme_bind_addr = mme_bind_addr;
   args->mme_args.s1ap_args.mme_name      = mme_name;

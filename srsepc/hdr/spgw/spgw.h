@@ -46,6 +46,8 @@ typedef struct {
   std::string sgi_if_addr;
   std::string sgi_if_name;
   uint32_t    max_paging_queue;
+  std::string unix_abstract_handle_mme; // ! maybe thisll work idk
+  std::string unix_abstract_handle_spgw;
 } spgw_args_t;
 
 typedef struct spgw_tunnel_ctx {
