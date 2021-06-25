@@ -19,13 +19,13 @@ ip netns add ue2
 # All arguments must be unique to the srsRAN enviroment during runtime
 
 
-sudo ./srsepc --spgw.unix_abstract_handle_mme @mme_s11  \
+./srsepc ./epc.conf --spgw.unix_abstract_handle_mme @mme_s11  \
               --spgw.unix_abstract_handle_spgw @spgw_s11 \
               --spgw.sgi_if_name srs_spgw_sgi1 \
               --mme.mme_bind_addr 127.1.1.101 \
               --spgw.gtpu_bind_addr 127.1.1.101
 
-sudo ./srsepc --spgw.unix_abstract_handle_mme @mme_s12  \
+./srsepc ./epc.conf --spgw.unix_abstract_handle_mme @mme_s12  \
               --spgw.unix_abstract_handle_spgw @spgw_s12 \
               --spgw.sgi_if_name srs_spgw_sgi2 \
               --mme.mme_bind_addr 127.1.1.103 \
@@ -39,10 +39,10 @@ sudo ./srsepc --spgw.unix_abstract_handle_mme @mme_s12  \
 # enb.mme_addr must correspond to epc's spgw.gtpu_bind_addr and mme.mme_bind_addr
 # tx_port and rx_port must be unique during runtime
 
-./srsenb --enb.mme_addr 127.1.1.101 \ 
+./srsenb ./enb.conf --enb.mme_addr 127.1.1.101 \ 
          --rf.device_args "fail_on_disconnect=true,tx_port=tcp://*:2000,rx_port=tcp://localhost:2001,id=enb,base_srate=23.04e6"
 
-./srsenb --enb.mme_addr 127.1.1.103 \ 
+./srsenb ./enb.conf --enb.mme_addr 127.1.1.103 \ 
          --rf.device_args "fail_on_disconnect=true,tx_port=tcp://*:2002,rx_port=tcp://localhost:2003,id=enb,base_srate=23.04e6"
 ```
 
@@ -51,12 +51,12 @@ sudo ./srsepc --spgw.unix_abstract_handle_mme @mme_s12  \
 # srsUE in this repo is modified for our testing, (-f# to test case #)
 # tx_port and rx_port must correspond to enb's tx_port and rx_port
 
-./srsue --rf.device_name=zmq \
+./srsue ./ue.conf --rf.device_name=zmq \
         --rf.device_args="tx_port=tcp://*:2001,rx_port=tcp://localhost:2000,id=ue,base_srate=23.04e6" \
         --gw.netns=ue1 \
         -f1
 
-./srsue --rf.device_name=zmq \
+./srsue ./ue.conf --rf.device_name=zmq \
         --rf.device_args="tx_port=tcp://*:2003,rx_port=tcp://localhost:2002,id=ue,base_srate=23.04e6" \
         --gw.netns=ue2 \
         -f2
