@@ -861,9 +861,6 @@ namespace srsue {
       rrc_ptr->send_con_request(cause);
 
 
-
-
-
       // Save dedicatedInfoNAS SDU, if needed
       if (dedicated_info_nas.get()) {
         if (rrc_ptr->dedicated_info_nas.get()) {

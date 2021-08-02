@@ -877,6 +877,7 @@ namespace srsue {
     ue_identity.m_tmsi = std::stoul(tokens.at(1));
     int tempEstCause = std::stoul(tokens.at(2));
     // print logs to stdout
+
     printf("------------Loading Case %06d-----------\n", args.fuzzLine);
     printf("MMEC loaded from file: 0x%02x\n", ue_identity.mmec);
     printf("TMSI loaded from file: 0x%08x\n", ue_identity.m_tmsi);
@@ -1022,6 +1023,15 @@ namespace srsue {
     rrc_ul_info_transfer->ded_info_type.set_ded_info_nas();
     rrc_ul_info_transfer->ded_info_type.ded_info_nas().resize(nas_msg->N_bytes);
     memcpy(rrc_ul_info_transfer->ded_info_type.ded_info_nas().data(), nas_msg->msg, nas_msg->N_bytes); // TODO Check!
+    // ! LOOK AT THIS
+        // ! LOOK AT THIS
+    // ! LOOK AT THIS
+    // ! LOOK AT THIS
+    // ! LOOK AT THIS
+    // ! LOOK AT THIS
+    // ! LOOK AT THIS
+    // ! LOOK AT THIS
+
 
     send_ul_dcch_msg(lcid, ul_dcch_msg);
   }
@@ -1585,8 +1595,9 @@ namespace srsue {
    *
    *
    * Packet processing
-   *
-   *
+   *. in which papers and circumstances is enb not testeed when ue ul messages are fuzzed
+   // is enb modified and how/when
+   *..
    *******************************************************************************/
 
   void rrc::send_ul_ccch_msg(const ul_ccch_msg_s& msg)
@@ -1597,6 +1608,7 @@ namespace srsue {
       logger.error("Couldn't allocate PDU in %s().", __FUNCTION__);
       return;
     }
+    
     asn1::bit_ref bref(pdcp_buf->msg, pdcp_buf->get_tailroom());
     msg.pack(bref);
     bref.align_bytes_zero();
