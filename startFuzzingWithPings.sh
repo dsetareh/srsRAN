@@ -82,13 +82,22 @@ do
 
 
     echo -e "${RED}!!${NC} FUZZING ${RED}!!${NC}\n" # fuzzing must be occuring in the bg
-    sleep 3 # ! 3 second wait, this is how long the full env lasts before killing begins
+    sleep 3 # ! 3 second wait
+
+    # ! ping stuff
+    ip netns exec ue1 ping 172.16.0.1 &
+    ping_pid=$!
+    echo -e "${GREEN}PINGING${NC}: ($ping_pid)\n"
+
+    sleep 3 # ! 3 second wait
+
 
     # use stored pid's to kill ue, then enb, then epc
-    echo -e "${RED}STOPPING${NC}: UE($ue_pid) - EPC ($epc_pid) - ENB ($enb_pid)\n"
+    echo -e "${RED}STOPPING${NC}: UE($ue_pid) - EPC ($epc_pid) - ENB ($enb_pid) - PING ($ping_pid)\n"
     kill -KILL $ue_pid
     kill -KILL $enb_pid
     kill -KILL $epc_pid
+    kill -KILL $ping_pid
 
     echo -e "${GREY}" # kill output is dimmed, as not useful
     sleep 3 # ! 3 second wait
@@ -96,8 +105,8 @@ do
 
     # save pcap file for enb
     
-    echo -e "\n${GREEN}Saving ENB PCAP as fuzzLogs/pcap/$i/$now.pcap${NC}\n"
-    cp enb.pcap fuzzLogs/pcap/$i/$now.pcap
+    echo -e "\n${GREEN}Saving ENB PCAP as fuzzLogs/pingedPcaps/$i.pcap${NC}\n"
+    cp enb.pcap fuzzLogs/pingedPcaps/$i.pcap
     
 
     # log competion of iteration, continue
