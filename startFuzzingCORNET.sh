@@ -55,7 +55,7 @@ fi
 
 for (( i=$1; i<=$2; i++ ))
 do
-    mkdir fuzzLogs/pcap/$1
+    mkdir fuzzLogs/pcap/$i
     for (( j=1; j<=100; j++ ))
     do
         # contruct header for logs and stdout
