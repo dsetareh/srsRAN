@@ -5,13 +5,20 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch srsUE",
+      "name": "Launch srsEPC",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/srsue/src/srsue",
-      "args": [
-        "-f17"
-      ],
+      "program": "${workspaceFolder}/build/srsepc/src/srsepc",
+      "args": ["--spgw.unix_abstract_handle_mme",
+        "@mme_s21",
+        "--spgw.unix_abstract_handle_spgw",
+        "@spgw_s21",
+        "--spgw.sgi_if_name",
+        "rs_spgw_sgi3",
+        "--mme.mme_bind_addr",
+        "127.3.2.100",
+        "--spgw.gtpu_bind_addr",
+        "127.3.2.100"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build/",
       "environment": [],

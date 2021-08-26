@@ -53,8 +53,8 @@ bool mme_gtpc::init_s11()
 {
 
   socklen_t sock_len;
-  char      mme_addr_name[]  = "@mme_s11";
-  char      spgw_addr_name[] = "@spgw_s11";
+  char      mme_addr_name[] = "@mme_s12";
+  char      spgw_addr_name[] = "@spgw_s12";
 
   // Logs
   m_logger.info("Initializing MME S11 interface.");
@@ -65,23 +65,25 @@ bool mme_gtpc::init_s11()
     m_logger.error("Error opening UNIX socket. Error %s", strerror(errno));
     return false;
   }
+  srsran::console("<MME GTPC> CUSTOM SOCKET NAMES %s AND %s\n", m_s1ap->m_s1ap_args.unix_abstract_handle_mme.c_str(), m_s1ap->m_s1ap_args.unix_abstract_handle_spgw.c_str());
+
 
   // Set MME Address
   memset(&m_mme_addr, 0, sizeof(struct sockaddr_un));
   m_mme_addr.sun_family = AF_UNIX;
-  snprintf(m_mme_addr.sun_path, sizeof(m_mme_addr.sun_path), "%s", mme_addr_name);
+  snprintf(m_mme_addr.sun_path, sizeof(m_mme_addr.sun_path), "%s", m_s1ap->m_s1ap_args.unix_abstract_handle_mme.c_str());
   m_mme_addr.sun_path[0] = '\0';
 
   // Bind socket to address
   if (bind(m_s11, (const struct sockaddr*)&m_mme_addr, sizeof(m_mme_addr)) == -1) {
-    m_logger.error("Error binding UNIX socket. Error %s", strerror(errno));
+    m_logger.error("Error binding UNIX socket. Error %s", strerror(errno)); // ! debug here
     return false;
   }
 
   // Set SPGW Address for later use
   memset(&m_spgw_addr, 0, sizeof(struct sockaddr_un));
   m_spgw_addr.sun_family = AF_UNIX;
-  snprintf(m_spgw_addr.sun_path, sizeof(m_spgw_addr.sun_path), "%s", spgw_addr_name);
+  snprintf(m_spgw_addr.sun_path, sizeof(m_spgw_addr.sun_path), "%s", m_s1ap->m_s1ap_args.unix_abstract_handle_spgw.c_str());
   m_spgw_addr.sun_path[0] = '\0';
 
   m_logger.info("MME S11 Initialized");

@@ -38,6 +38,8 @@ struct s1ap_args_t {
   std::string gtp_advertise_addr;
   std::string s1c_bind_addr;
   std::string enb_name;
+  std::string unix_abstract_handle_spgw;
+  std::string unix_abstract_handle_mme;
 };
 
 // S1AP interface for RRC

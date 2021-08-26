@@ -1,24 +1,66 @@
-srsRAN
-======
+# How to run multiple srsRAN + zmq environments on one machine
 
-[![Build Status](https://travis-ci.com/srsran/srsRAN.svg?branch=master)](https://travis-ci.com/srsran/srsRAN)
-[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/srsran/srsRAN.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/srsran/srsRAN/context:cpp)
-[![Coverity](https://scan.coverity.com/projects/23048/badge.svg)](https://scan.coverity.com/projects/srsran_agpl)
+`NOTE: ue/enb/epc.conf should already be setup for normal single environment srsRAN+zmq`
+## generate namespaces
+```
+ip netns add ue1
+ip netns add ue2
+```
 
-srsRAN is a 4G/5G software radio suite developed by [SRS](http://www.srs.io).
+## srsepc
+```
+# srsRAN must be built from this repo for the additional 'abstract' arguments
+# they're not handles, but abstract unix pipes, ignore the naming
 
-See the [srsRAN project pages](https://www.srsran.com) for information, guides and project news.
+# unix_abstract_handle_mme must start with an '@'
+# unix_abstract_handle_spgw must start with an '@'
+# mme.mme_bind_addr and spgw.gtpu_bind_addr are the same ip
 
-The srsRAN suite includes:
-  * srsUE - a full-stack SDR 4G/5G-NSA UE application (5G-SA coming soon)
-  * srsENB - a full-stack SDR 4G eNodeB application (5G-NSA and 5G-SA coming soon)
-  * srsEPC - a light-weight 4G core network implementation with MME, HSS and S/P-GW
+# All arguments must be unique to the srsRAN enviroment during runtime
 
-For application features, build instructions and user guides see the [srsRAN documentation](https://docs.srsran.com).
 
-For license details, see LICENSE file.
+./srsepc ./epc.conf --spgw.unix_abstract_handle_mme @mme_s11  \
+              --spgw.unix_abstract_handle_spgw @spgw_s11 \
+              --spgw.sgi_if_name srs_spgw_sgi1 \
+              --mme.mme_bind_addr 127.1.1.101 \
+              --spgw.gtpu_bind_addr 127.1.1.101
 
-Support
-=======
+./srsepc ./epc.conf --spgw.unix_abstract_handle_mme @mme_s12  \
+              --spgw.unix_abstract_handle_spgw @spgw_s12 \
+              --spgw.sgi_if_name srs_spgw_sgi2 \
+              --mme.mme_bind_addr 127.1.1.103 \
+              --spgw.gtpu_bind_addr 127.1.1.103
+```
 
-Mailing list: https://lists.softwareradiosystems.com/mailman/listinfo/srslte-users
+## srsenb
+```
+# srsENB in this repo is unmodified from upstream (as of right now)
+
+# enb.mme_addr must correspond to epc's spgw.gtpu_bind_addr and mme.mme_bind_addr
+# tx_port and rx_port must be unique during runtime
+
+./srsenb ./enb.conf --enb.mme_addr 127.1.1.101 \ 
+         --rf.device_args "fail_on_disconnect=true,tx_port=tcp://*:2000,rx_port=tcp://localhost:2001,id=enb,base_srate=23.04e6"
+
+./srsenb ./enb.conf --enb.mme_addr 127.1.1.103 \ 
+         --rf.device_args "fail_on_disconnect=true,tx_port=tcp://*:2002,rx_port=tcp://localhost:2003,id=enb,base_srate=23.04e6"
+```
+
+## srsue
+```
+# srsUE in this repo is modified for our testing, (-f# to test case #)
+# tx_port and rx_port must correspond to enb's tx_port and rx_port
+
+./srsue ./ue.conf --rf.device_name=zmq \
+        --rf.device_args="tx_port=tcp://*:2001,rx_port=tcp://localhost:2000,id=ue,base_srate=23.04e6" \
+        --gw.netns=ue1 \
+        -f1
+
+./srsue ./ue.conf --rf.device_name=zmq \
+        --rf.device_args="tx_port=tcp://*:2003,rx_port=tcp://localhost:2002,id=ue,base_srate=23.04e6" \
+        --gw.netns=ue2 \
+        -f2
+
+```
+
+`dont forget to edit the .confs so that pcaps+logs are saved`

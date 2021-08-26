@@ -99,11 +99,13 @@ void spgw::gtpc::stop()
 int spgw::gtpc::init_s11(spgw_args_t* args)
 {
   socklen_t sock_len;
-  char      spgw_addr_name[] = "@spgw_s11";
-  char      mme_addr_name[]  = "@mme_s11";
+  char      mme_addr_name[] = "@mme_s12";
+  char      spgw_addr_name[] = "@spgw_s12";
 
   // Logs
   m_logger.info("Initializing SPGW S11 interface.");
+  srsran::console("<SPGW GTPC> CUSTOM SOCKET NAMES %s AND %s\n", args->unix_abstract_handle_mme.c_str(), args->unix_abstract_handle_spgw.c_str());
+
 
   // Open Socket
   m_s11 = socket(AF_UNIX, SOCK_DGRAM, 0);
@@ -115,13 +117,13 @@ int spgw::gtpc::init_s11(spgw_args_t* args)
   // Set MME Address
   memset(&m_mme_addr, 0, sizeof(struct sockaddr_un));
   m_mme_addr.sun_family = AF_UNIX;
-  snprintf(m_mme_addr.sun_path, sizeof(m_mme_addr.sun_path), "%s", mme_addr_name);
+  snprintf(m_mme_addr.sun_path, sizeof(m_mme_addr.sun_path), "%s", args->unix_abstract_handle_mme.c_str());
   m_mme_addr.sun_path[0] = '\0';
 
   // Set SPGW Address
   memset(&m_spgw_addr, 0, sizeof(struct sockaddr_un));
   m_spgw_addr.sun_family = AF_UNIX;
-  snprintf(m_spgw_addr.sun_path, sizeof(m_spgw_addr.sun_path), "%s", spgw_addr_name);
+  snprintf(m_spgw_addr.sun_path, sizeof(m_spgw_addr.sun_path), "%s", args->unix_abstract_handle_spgw.c_str());
   m_spgw_addr.sun_path[0] = '\0';
 
   // Bind socket to address
