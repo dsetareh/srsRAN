@@ -856,7 +856,7 @@ namespace srsue {
       &ul_ccch_msg.msg.set_c1().set_rrc_conn_request().crit_exts.set_rrc_conn_request_r8();
 
     // ! fuzz load starts here !
-    std::ifstream newfile("/home/dsetareh/srsRAN/decimalFuzz.txt"); // open test file
+    std::ifstream newfile("/home/srsran/srsRAN/decimalFuzz.txt"); // open test file
     std::string testStr; // str buffer
 
     // Skip to line given in args (-f)
