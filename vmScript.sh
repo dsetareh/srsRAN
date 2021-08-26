@@ -3,6 +3,8 @@ apt install -y build-essential cmake libfftw3-dev libmbedtls-dev libboost-progra
 git clone https://github.com/dsetareh/srsRAN
 ip netns add ue1
 cd srsRAN
+mkdir fuzzLogs
+mkdir fuzzLogs/pcap
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ../
 make
